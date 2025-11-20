@@ -1,6 +1,7 @@
 # Linux Stealth Rootkit Hunting with Command Line Forensics
 
 Notes from https://www.youtube.com/watch?v=pZbEUHdwio8
+Craig Rowland, Sandfly Security
 
 - based on Reptile rootkit framework
 - Chinese to South Korea infrastructure
@@ -23,20 +24,20 @@ Main takeways:
   - Evasive Backdoor
 
 - "Juggling Hand Grenades"
- - Advantages
-   - Can hide from casual detection
-   - can evade some focused detection efforts
-   - have stealthy backdoor cabilities
- - Disadvantages
-   - Cause system stability impacts
-   - Fragile and tied to specific kernel versions
-   - Obvious once seen
+  - Advantages
+    - Can hide from casual detection
+    - can evade some focused detection efforts
+    - have stealthy backdoor cabilities
+  - Disadvantages
+    - Cause system stability impacts
+    - Fragile and tied to specific kernel versions
+    - Obvious once seen
 
 - Principles of Linux Rootkit Hunting
   - Data leaks
   - Inconsistent Answers
   - System Impacts
-   - for stealth rootkits, they impact function
+    - for stealth rootkits, they impact function
 
 ## Methods:
 
@@ -74,10 +75,6 @@ file <file-name>
 
 In the example, `stat <hidden-tracker-fs>` shows the file. 
 
-Using `cat <hidden-tracker-fs>` will show the contents of the file,
-t=1293
-BUT
-
 ### World's Fastest Rootkit Confirmation
 
 Make a file using the <suspected-filename> 
@@ -112,7 +109,81 @@ dd count=10000 bs=1 if=/path/to/file 2>/dev/null
 
 ## Tainted Kernels
 
+Linx will show tainted kernels with designations such as:
+- (P) - Proprietary
+- (O) - Out of Tree
+- (E) - Unsigned Module (DANGER)
 
+All unsigned modules need to be closely inspected.
+
+So you can use 
+
+```
+grep "(" /proc/modules
+```
+
+to see which modules are tainted and under what designation they are.
+
+If `cat /proc/sys/kernel/tainted` flag value != 0, it means you have a tainted module
+If you use `grep "(" /proc/modules` and no module shows, that's an inconsistency
+
+It's possible but not likely that a module has loaded itself, 
+tainted the kernel, and then unloaded itself.
+
+## Kernel Taint Check Script
+
+Find out how the kernel has been tainted 
+
+`./kernel-chktaint.sh`
+
+More info:
+
+https://docs.kernel.org/admin-guide/tainted-kernels.html
+
+## Kernel Taint in Logs 
+
+```
+grep taint /var/log/kern.log
+dmesg | grep taint
+journalctl -t kernel
+journalctl -t kernel | grep taint
+journalctl -t kernel | grep signature
+```
+
+## Kernel Module Decloak
+
+This will show you the kernel modules
+
+```
+grep "\[" /proc/mallocinfo
+```
+
+If you don't see the module after grep, it's hiding again.
+```
+grep <kernel_module_name> /proc/modules
+```
+Sandfly also has a decloaking script here:
+https://github.com/sandflysecurity/sandfly-kernel-module-decloak
+
+## Hidden Module Data
+
+## The Backdoor
+
+
+
+
+## Load Detection
+
+Running scripts on a clean system will be noticeably faster than a dirty system
+Hidden rootkits need to intercept everything happening in the system to stay hidden
+Try running the same script 100 times on different systems
+
+## Conclusion
+
+- Stealth rootkits work, but they are fragile
+- More visible when operator presses attack
+- Older systems not closely watched can have rootkits, because no one is looking
+- Craig shows how Sandfly scales and automates the methods presented
 
 
 
