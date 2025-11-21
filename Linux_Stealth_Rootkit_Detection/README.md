@@ -78,7 +78,7 @@ In the example, `stat <hidden-tracker-fs>` shows the file.
 
 ### World's Fastest Rootkit Confirmation
 
-Make a file using the <suspected-filename> 
+Make a file using `touch <suspected-filename>` 
 
 If it's not in the directory listing afterwards, Rootkit Active!
  
@@ -126,9 +126,10 @@ grep "(" /proc/modules
 
 to see which modules are tainted and under what designation they are.
 
-If `cat /proc/sys/kernel/tainted` flag value != 0, it means you have a tainted module
+If `cat /proc/sys/kernel/tainted` flag value != 0, it means you have a tainted module.
 
-If you use `grep "(" /proc/modules` and no module shows, that's an inconsistency
+Crosscheck - If you use `grep "(" /proc/modules` and no module shows, that's an 
+inconsistency.
 
 It's possible but not likely that a module has loaded itself, 
 tainted the kernel, and then unloaded itself.
@@ -145,9 +146,17 @@ https://docs.kernel.org/admin-guide/tainted-kernels.html
 
 ## Kernel Taint in Logs 
 
+Check the logs, and ask in multiple ways:
+
 ```
 grep taint /var/log/kern.log
+```
+
+```
 dmesg | grep taint
+```
+
+```
 journalctl -t kernel
 journalctl -t kernel | grep taint
 journalctl -t kernel | grep signature
@@ -155,25 +164,79 @@ journalctl -t kernel | grep signature
 
 ## Kernel Module Decloak
 
-This will show you the kernel modules
+`/proc/vmallocinfo` is real-time memory use at run-time on Linux for processes, 
+including kernel modules.
 
 ```
 grep "\[" /proc/mallocinfo
 ```
+In the example, the hidden module `vmwfxs` also shows `khook_init` which is a known
+kernel hook library call.
 
 If you don't see the module after grep, it's hiding again.
 ```
 grep <kernel_module_name> /proc/modules
 ```
+
 Sandfly also has a decloaking script here:
 https://github.com/sandflysecurity/sandfly-kernel-module-decloak
 
+It will decloak and give info for you.
+
 ## Hidden Module Data
+
+First, copy the binary to an isolated system before performing the following commands.
+
+```
+file /usr/lib64/tracker-fs
+```
+In the example, the file is not stripped, making analysis easier.
+
+```
+strings /usr/lib64/tracker-fs
+```
+
+Performing the `strings` command reveals at least the following:
+
+- `kallsyms_lookup_name`, `khook: waiting for %s...`  Hooking system calls (kallsyms, khook)
+
+- `tracker-fs` Backdoor binary name
+
+- `filldir64`, `proc_root_readdir` Hiding directory entities (filldir/readdir)
+
+- `tcp4_seq_show` TCP concealment for hiding or obfuscating network traffic
+
+- `bash`, `cash` Shells for backdoor (bash, etc.)
+
+- Various paths
+
+- `httpch`, `smtp`, `https` Various protocols
+
+- `acpi/pcicard` Control socket (/proc/acpi/pcicard)
+
+- `HISTORY=/dev/null`, `BASH_HISTORY=/dev/null` Shell anti-forensics
+
+- `vmwfxs` Module name
+
+- `tracker-efs` Backdoor process name
+
+- Various passwords used to authenticate against the backdoor
 
 ## The Backdoor
 
+Strengths:
+- Activates on any port with magic packet
+- Enables lateral movement or shell access
+- Has anti-forensics features
 
+Weaknesses:
+- Incomplete hiding exposes it
+- Can recover binary when running
+- Pressing attack always compromises stealth
 
+## Magic Packet Backdoor Activation
+
+## Backdoor Features
 
 ## Load Detection
 
