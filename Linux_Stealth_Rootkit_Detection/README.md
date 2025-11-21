@@ -11,6 +11,7 @@ Main takeways:
 - Linux doesn't hide anything 
 - Good forensic technique important
 - Improved my understanding of how the Linux OS works
+- Stealth rootkits not exactly the biggest threat
  
 ## Basic Concepts:
 
@@ -100,6 +101,7 @@ The kernel can lie, but the file system won't
 ### Single Byte Read Decloaking
 
 Fragment the file into single bytes to bypass rootkit buffer.
+
 Rootkits won't reassemble the text due to cost.
 
 ```
@@ -125,6 +127,7 @@ grep "(" /proc/modules
 to see which modules are tainted and under what designation they are.
 
 If `cat /proc/sys/kernel/tainted` flag value != 0, it means you have a tainted module
+
 If you use `grep "(" /proc/modules` and no module shows, that's an inconsistency
 
 It's possible but not likely that a module has loaded itself, 
