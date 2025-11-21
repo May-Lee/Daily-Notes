@@ -178,7 +178,9 @@ https://github.com/sandflysecurity/sandfly-kernel-module-decloak
 ## Load Detection
 
 Running scripts on a clean system will be noticeably faster than a dirty system
+
 Hidden rootkits need to intercept everything happening in the system to stay hidden
+
 Try running the same script 100 times on different systems
 
 ## Conclusion
