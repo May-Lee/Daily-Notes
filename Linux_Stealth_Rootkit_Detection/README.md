@@ -198,29 +198,20 @@ strings /usr/lib64/tracker-fs
 
 Performing the `strings` command reveals at least the following:
 
-- `kallsyms_lookup_name`, `khook: waiting for %s...`  Hooking system calls (kallsyms, khook)
-
-- `tracker-fs` Backdoor binary name
-
-- `filldir64`, `proc_root_readdir` Hiding directory entities (filldir/readdir)
-
-- `tcp4_seq_show` TCP concealment for hiding or obfuscating network traffic
-
-- `bash`, `cash` Shells for backdoor (bash, etc.)
-
-- Various paths
-
-- `httpch`, `smtp`, `https` Various protocols
-
-- `acpi/pcicard` Control socket (/proc/acpi/pcicard)
-
-- `HISTORY=/dev/null`, `BASH_HISTORY=/dev/null` Shell anti-forensics
-
-- `vmwfxs` Module name
-
-- `tracker-efs` Backdoor process name
-
-- Various passwords used to authenticate against the backdoor
+|Example string|Description|
+|----|----|
+|`kallsyms_lookup_name`, `khook: waiting for %s...`  Hooking system calls (kallsyms, khook)
+|`tracker-fs`|Backdoor binary name|
+|`filldir64`, `proc_root_readdir`|Hiding directory entities (filldir/readdir)|
+|`tcp4_seq_show`|TCP concealment for hiding or obfuscating network traffic|
+|`bash`, `cash`|Shells for backdoor (bash, etc.)|
+|`/bin`|Various paths|
+|`httpch`, `smtp`, `https`|Various protocols|
+|`acpi/pcicard`|Control socket (/proc/acpi/pcicard)|
+|`HISTORY=/dev/null`, `BASH_HISTORY=/dev/null`|Shell anti-forensics|
+|`vmwfxs`|Module name|
+|`tracker-efs`|Backdoor process name|
+|`<some_long_hashy_string>`|Various passwords used to authenticate against the backdoor|
 
 ## The Backdoor
 
@@ -235,6 +226,7 @@ Weaknesses:
 - Pressing attack always compromises stealth
 
 ## Magic Packet Backdoor Activation
+- Can operate on any port
 
 ## Backdoor Features
 
