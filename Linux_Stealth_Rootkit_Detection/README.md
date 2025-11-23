@@ -218,6 +218,7 @@ Performing the `strings` command reveals at least the following:
 Strengths:
 - Activates on any port with magic packet
 - Enables lateral movement or shell access
+  - can chain together multiple backdoors
 - Has anti-forensics features
 
 Weaknesses:
@@ -226,8 +227,22 @@ Weaknesses:
 - Pressing attack always compromises stealth
 
 ## Magic Packet Backdoor Activation
-- Can operate on any port
+- Sends magic packet with TCP Sequence and IP-ID set
+- Magic packet on any port activates it
+- Backdoor spawns, this means it's now pressed attack and will be easier to detect
+- Redirects TCP stream to backdoor
+- Traffic is encrypted to hide
 
+```mermaid
+sequenceDiagram
+    participant rootkit
+    participant any_TCP_port
+    participant backdoor
+    rootkit->>port: Sends magic packet with TCP Sequence and IP-ID set
+    port->>backdoor: Activates and spawns backdoor
+    backdoor->>port: Encrypted traffic
+    port->>backdoor: Encrypted traffic   
+```
 ## Backdoor Features
 
 ## Load Detection
