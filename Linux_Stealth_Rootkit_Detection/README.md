@@ -200,7 +200,7 @@ Performing the `strings` command reveals at least the following:
 
 |Example string|Description|
 |----|----|
-|`kallsyms_lookup_name`, `khook: waiting for %s...`  Hooking system calls (kallsyms, khook)
+|`kallsyms_lookup_name`, `khook: waiting for %s...`|Hooking system calls (kallsyms, khook)|
 |`tracker-fs`|Backdoor binary name|
 |`filldir64`, `proc_root_readdir`|Hiding directory entities (filldir/readdir)|
 |`tcp4_seq_show`|TCP concealment for hiding or obfuscating network traffic|
